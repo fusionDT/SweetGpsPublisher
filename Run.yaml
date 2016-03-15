@@ -1,2 +1,2 @@
 Base: exis-nodejs
-Command: nodejs main.js
+Command: nodejs server.js
