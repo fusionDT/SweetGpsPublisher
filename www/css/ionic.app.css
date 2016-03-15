@@ -7681,6 +7681,7 @@ input[type="color"] {
   padding-top: 2px;
   padding-left: 0;
   height: 34px;
+  width: 100%;
   color: #111;
   vertical-align: middle;
   font-size: 14px;
