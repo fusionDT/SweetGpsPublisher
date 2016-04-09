@@ -1,27 +1,49 @@
 angular.module('exisChat.controller', [])
 
-.controller('HomeCtrl', function($scope, $riffle, $ionicScrollDelegate) {
+.controller('HomeCtrl', 
+	function($scope, $riffle, $ionicScrollDelegate, $cordovaGeolocation, $ionicPlatform, $ionicLoading) {
 
   $scope.msgs = [];
 
   //Login anonymously to Exis (requires Auth appliance level 0)
-  $riffle.login();
+  $riffle.login(); 
 
+	$scope.show = function() {
+		$ionicLoading.show({
+			template: '<ion-spinner></ion-spinner><br>Getting GPS Location...'
+		});
+	};
+	$scope.hide = function(){
+		$ionicLoading.hide();
+	};
+
+	function geoSuccess(position){
+		console.log(position);
+    var msg = {username: $riffle.user.username(), msg: "https://maps.google.com/maps?q="}
+		msg.msg += String(position.coords.latitude) + ',' + String(position.coords.longitude);
+    $riffle.publish('geoEvent', msg);
+		$scope.hide();
+    displayMsg(msg);
+	}
+	function geoError(err){
+		console.log(err);
+	}
   //subscribe to the chat channel
-  $riffle.subscribe('exisChat', gotMsg);
+  $riffle.subscribe('geoEvent', $riffle.want(geoEvent, {username: String, msg: String}));
 
   //handle messages here
-  function gotMsg(msg){
+  function geoEvent(msg){
     msg.received = true;
     displayMsg(msg);
   }
    
   //publish message
-  $scope.sendMsg = function(text){
-    var msg = {username: $riffle.user.username(), msg: text}
-    $riffle.publish('exisChat', msg);
-    $scope.input.msg = '';
-    displayMsg(msg);
+  $scope.sendMsg = function(){
+		$scope.show();
+		$ionicPlatform.ready(function(){
+			$cordovaGeolocation.getCurrentPosition({timeout: 5000}).then(geoSuccess, geoError);
+		});
+
   }
 
   //display our msg

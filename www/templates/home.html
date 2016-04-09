@@ -11,7 +11,7 @@
             <span class="message-time">{{ message.username }}</span>
           </div>
           <div class="message">
-            {{ message.msg }}
+            <a ng-href="{{message.msg}}" target="_blank">{{message.username}}'s Location</a>
           </div>
         </div>
       </div>
@@ -21,7 +21,8 @@
           <div class="message-detail">
             <span class="message-time">Me</span>
           </div>
-          <div class="message" ng-bind-html="message.msg">
+          <div class="message">
+            <a ng-href="{{message.msg}}" target="_blank">My Location</a>
           </div>
         </div>
       </div>
@@ -31,15 +32,9 @@
 
   <form name="sendMessageForm" ng-submit="sendMsg(input.msg)" novalidate>
     <ion-footer-bar class="bar-stable message-footer" keyboard-attach class="bar-assertive">
-      <label class="item-input-wrapper">
-        <input type="text" ng-model="input.msg" value="" placeholder="Send a message..."
-                  required minlength="1" maxlength="1500" ></input>
-      </label>
-      <div class="footer-btn-wrap">
-        <button class="button button-icon icon ion-android-send footer-btn" type="submit"
-                ng-disabled="!input.msg || input.msg === ''">
+        <button class="button button-block button-assertive" type="submit">
+				  Publish My Location  &nbsp;&nbsp;<span class="icon ion-android-send"></span>
         </button>
-      </div>
     </ion-footer-bar>
   </form>
 </ion-view>
